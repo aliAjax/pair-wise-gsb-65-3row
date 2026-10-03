@@ -1,10 +1,14 @@
 export type ShipmentStatus = '待装机' | '运输中' | '待放行' | '已放行' | '已拒绝'
 export type DeviationStatus = '待调查' | '调查中' | '待放行复核' | '已关闭'
+export type PointSource = '设备' | '人工'
 
 export interface TemperaturePoint {
   id: string
+  /** 统一后的时刻（设备离线缓存的机场当地时间已在补传导入时换算为UTC） */
   time: string
   value: number
+  /** 缺省视为设备读数 */
+  source?: PointSource
 }
 
 export interface ShipmentSegment {
@@ -18,6 +22,31 @@ export interface ShipmentSegment {
   handler: string
   note: string
   temperature: TemperaturePoint[]
+}
+
+/** 补传导入的一条原始记录（机场当地时间 + 时区） */
+export interface BackfillRecord {
+  localTime: string
+  timezone: string
+  value: number
+  source: PointSource
+}
+
+/** 人工补录与设备读数打架时另存的待复核读数 */
+export interface PendingReading {
+  id: string
+  segmentId: string
+  localTime: string
+  timezone: string
+  /** 统一后的UTC时刻 */
+  time: string
+  value: number
+  reason: '与设备读数冲突' | '无设备读数'
+  /** 冲突时刻的设备读数 */
+  deviceValue?: number
+  status: '待复核' | '已采纳' | '已作废'
+  submittedBy: string
+  submittedAt: string
 }
 
 export interface EvidenceFile {
@@ -52,6 +81,8 @@ export interface Shipment {
   segments: ShipmentSegment[]
   evidence: EvidenceFile[]
   signatures: ShipmentSignature[]
+  /** 人工补录待复核读数，存在待复核项时禁止放行 */
+  pendingReviews?: PendingReading[]
   version: number
   updatedAt: string
 }
@@ -74,6 +105,8 @@ export interface Deviation {
   evidence: string
   reviewer: string
   reviewNote: string
+  /** 设备记录更新后未关闭偏差需重新确认，确认前不得复核关闭 */
+  recheckRequired?: boolean
   version: number
 }
 

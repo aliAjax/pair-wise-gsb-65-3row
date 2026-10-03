@@ -1,9 +1,10 @@
-import type { AuditEntry, Deviation, Shipment } from '../types'
+import type { AuditEntry, Deviation, Shipment, TemperaturePoint } from '../types'
 
-const series = (base: number, pattern: number[]): { id: string; time: string; value: number }[] => pattern.map((value, index) => ({
+const series = (base: number, pattern: number[]): TemperaturePoint[] => pattern.map((value, index) => ({
   id: `T-${index}`,
   time: `2026-09-29T${String(6 + Math.floor(index / 2)).padStart(2, '0')}:${index % 2 ? '30' : '00'}:00`,
-  value: base + value
+  value: base + value,
+  source: '设备'
 }))
 
 export const seedShipments: Shipment[] = [
@@ -43,6 +44,9 @@ export const seedShipments: Shipment[] = [
       { role: '承运方', name: '全日空货运', status: '已签', signedAt: '2026-09-29T14:30:00', comment: '温度波动已报告' },
       { role: '收货方', name: '佐藤健', status: '待签', signedAt: '', comment: '' },
       { role: '放行人员', name: '顾言', status: '待签', signedAt: '', comment: '' }
+    ],
+    pendingReviews: [
+      { id: 'PR-260929-01', segmentId: 'SEG-2', localTime: '2026-09-29 12:00', timezone: 'UTC+9', time: '2026-09-29T03:00:00.000Z', value: 8.9, reason: '与设备读数冲突', deviceValue: 10.2, status: '待复核', submittedBy: '佐藤健', submittedAt: '2026-09-29T15:02:00' }
     ]
   }
 ]
@@ -57,5 +61,6 @@ export const seedDeviations: Deviation[] = [
 export const seedAudit: AuditEntry[] = [
   { id: 'A65-1', shipmentId: 'AIR-260929-01', action: '任务创建', operator: '张骁', detail: '关联3个航段和4类证据要求', createdAt: '2026-09-29T04:10:00' },
   { id: 'A65-2', shipmentId: 'AIR-260929-02', action: '自动创建偏差', operator: '温度监测系统', detail: 'SEG-2温度10.4℃超出2-10℃范围', createdAt: '2026-09-29T14:05:00' },
-  { id: 'A65-3', shipmentId: 'AIR-260929-02', action: '提交偏差调查', operator: '温控质量组', detail: '补充处理分支，等待收货方稳定性确认', createdAt: '2026-09-29T16:40:00' }
+  { id: 'A65-3', shipmentId: 'AIR-260929-02', action: '提交偏差调查', operator: '温控质量组', detail: '补充处理分支，等待收货方稳定性确认', createdAt: '2026-09-29T16:40:00' },
+  { id: 'A65-4', shipmentId: 'AIR-260929-02', action: '人工补录待复核', operator: '佐藤健', detail: '羽田当地时间12:00读数8.9℃与设备读数10.2℃冲突，另存待复核，期间禁止放行', createdAt: '2026-09-29T15:02:00' }
 ]

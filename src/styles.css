@@ -36,3 +36,12 @@ main { grid-column: 2; min-width: 0; position: relative; }
 .deviation-nav button > div { display: flex; gap: 8px; align-items: center; }.deviation-nav span, .deviation-nav small { color: #7d898c; font-size: 11px; }
 .deviation-main { background: white; border: 1px solid #d9e1e3; padding: 18px; }.two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }.raw-points { background: #f4f8f8; padding: 14px; }.raw-points p { color: #6d7b7e; }.raw-points code { color: #174d60; line-height: 1.8; }
 .reset { position: fixed; right: 20px; bottom: 15px; }.empty { padding: 80px; text-align: center; color: #718085; }
+.alert-gap { margin-top: 10px; }
+.blocker-list { margin: 10px 0 0; padding: 10px 14px 10px 30px; background: #fff7f4; border: 1px solid #f3d2c8; border-radius: 4px; color: #a33d2a; font-size: 12px; display: grid; gap: 4px; }
+.excursion-band { margin-top: 10px; padding-top: 10px; border-top: 1px dashed #dde4e6; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.excursion-band strong { font-size: 12px; color: #41565c; margin-right: 4px; }
+.modal-note { color: #67777b; font-size: 12px; line-height: 1.7; background: #f4f8f8; padding: 10px 12px; border-radius: 4px; }
+.sample-actions { margin-bottom: 8px; }
+.error-list { margin: 0; padding-left: 18px; }
+.raw-points .ant-tag { margin-bottom: 6px; }
+.raw-points div span { margin-left: 8px; color: #41565c; font-size: 12px; }
