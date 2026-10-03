@@ -16,6 +16,7 @@ export function ShipmentList() {
     const text = `${item.id} ${item.product} ${item.batch} ${item.route} ${item.containerId}`.toLowerCase()
     return (!state.keyword || text.includes(state.keyword.toLowerCase())) && (state.status === '全部' || item.status === state.status)
   }), [state.shipments, state.keyword, state.status])
+  const pendingCount = state.shipments.flatMap((item) => item.segments).flatMap((segment) => segment.pendingReadings ?? []).filter((item) => item.status === '待复核').length
   const columns = [
     { title: '任务编号', dataIndex: 'id', width: 150 },
     { title: '货物', dataIndex: 'product', render: (value: string, row: Shipment) => <div><strong>{value}</strong><small className="cell-sub">{row.batch}</small></div> },
@@ -33,6 +34,7 @@ export function ShipmentList() {
       <article><span>待放行</span><strong>{state.shipments.filter((item) => item.status === '待放行').length}</strong><small>需完成证据核验</small></article>
       <article><span>未关闭偏差</span><strong>{state.deviations.filter((item) => item.status !== '已关闭').length}</strong><small>温度超限调查</small></article>
       <article><span>待核验文件</span><strong>{state.shipments.flatMap((item) => item.evidence).filter((item) => !item.verified).length}</strong><small>不得直接放行</small></article>
+      <article><span>待复核读数</span><strong>{pendingCount}</strong><small>人工补录待确认</small></article>
     </div>
     <div className="toolbar">
       <Input value={state.keyword} onChange={(event) => state.setKeyword(event.target.value)} allowClear placeholder="搜索任务、货物、批次、航线或温控箱" />

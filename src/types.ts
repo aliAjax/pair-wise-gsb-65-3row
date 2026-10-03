@@ -5,6 +5,25 @@ export interface TemperaturePoint {
   id: string
   time: string
   value: number
+  source?: '设备' | '人工'
+}
+
+export interface PendingReading {
+  id: string
+  time: string
+  value: number
+  enteredBy: string
+  status: '待复核' | '已采纳' | '已驳回'
+  note: string
+}
+
+export interface ExcursionWindow {
+  id: string
+  start: string
+  end: string
+  direction: '高超限' | '低超限'
+  peak: number
+  points: number
 }
 
 export interface ShipmentSegment {
@@ -18,6 +37,8 @@ export interface ShipmentSegment {
   handler: string
   note: string
   temperature: TemperaturePoint[]
+  pendingReadings?: PendingReading[]
+  excursions?: ExcursionWindow[]
 }
 
 export interface EvidenceFile {
@@ -74,6 +95,7 @@ export interface Deviation {
   evidence: string
   reviewer: string
   reviewNote: string
+  reconfirmRequired?: boolean
   version: number
 }
 
